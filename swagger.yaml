@@ -1,0 +1,98 @@
+swagger: "2.0"
+info:
+  description: "Charging station finder."
+  version: "1.0.0"
+  title: "Charging station finder"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "nuwan.walisundara@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "charge.station"
+basePath: "/v2"
+tags:
+- name: "cp"
+  description: "Charging station for electric vehicle"
+
+
+schemes:
+- "https"
+- "http"
+paths:
+  /findByCompany/{companyId}:
+    post:
+      tags:
+      - "cp"
+      summary: "Add a new pet to the store"
+      description: ""
+      operationId: "addPet"
+      consumes:
+      - "application/json"
+ 
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Pet object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/StationFinder"
+      - name: "companyId"
+        in: "path"
+        description: "ID of respective company having the charging technology"
+        required: true
+        type: "string"
+      responses:
+        "405":
+          description: "Invalid input"
+
+  
+definitions:
+
+  Company:
+    properties:
+      id:
+        type: "string"
+      company_id:
+        type: "string"
+      name:
+        type: "string"
+      chargingTechnology:
+       type: "string"
+      stations:
+        type: "array"
+        items:
+          $ref: "#/definitions/Station"
+      childrens:
+        type: "array"
+        items:
+          $ref: "#/definitions/Company"
+  Station:
+    properties:
+      id:
+        type: "string"
+      station_id:
+        type: "string"
+      name:
+        type: "string"
+      distanceFromCurrentlocation:
+        type: "string"
+      longitude:
+        type: "string"      
+      latitude:
+        type: "string"
+        
+  StationFinder:
+    properties:
+      station_id:
+        type: "string"
+      preferredRadius:
+        type: "string"
+      longitude:
+        type: "string"      
+      latitude:
+        type: "string"
+
+  
