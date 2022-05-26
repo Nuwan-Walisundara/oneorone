@@ -1,21 +1,21 @@
 package com.dmz.charging.station.finder.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
+import static java.lang.Math.acos;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+import static java.lang.Math.toRadians;
 
-import static java.lang.Math.*;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dmz.charging.station.finder.dal.ChargingStationDAL;
 import com.dmz.charging.station.finder.dal.CompanyDAL;
+import com.dmz.charging.station.finder.exception.BusinessException;
 import com.dmz.charging.station.finder.service.mapper.CompanyMapper;
 import com.dmz.charging.station.finder.service.mapper.StationMapper;
 import com.dmz.charging.station.finder.service.model.custom.CompanyDto;
@@ -42,11 +42,15 @@ import com.dmz.charging.station.finder.service.model.domain.Station;
 	@Autowired
 	StationMapper stationMapper;
 	
+	public StationMapper getStationMapper() {
+		return stationMapper;
+	}
+	
 	 /**
 	  * This will query the db for matching nearest  stations.
 	  */
 	@Override
-	public SearchResult find(StationFinderDTO searchDto) {
+	public SearchResult find(StationFinderDTO searchDto) throws BusinessException{
 		
 		/**
 		 * convert the latitude longitude values from Degree to Radian
@@ -69,6 +73,9 @@ import com.dmz.charging.station.finder.service.model.domain.Station;
 		 */
 		List<Long> companyIdList = companyDal.findChildCompaniesByParent( searchDto.getCompanyID());
 		
+		if(companyIdList.isEmpty()) {
+			return new SearchResult();
+		}
 		/**
 		 * Query the station 
 		 */
@@ -90,6 +97,7 @@ import com.dmz.charging.station.finder.service.model.domain.Station;
 		 }else {
 			 return new SearchResult(companyDTOs);
 		 }
+		 
 	}
 	
 
@@ -101,7 +109,7 @@ import com.dmz.charging.station.finder.service.model.domain.Station;
 	 * @param stationList
 	 * @return
 	 */
-	private Map<Long,List<StationDTO>> toStationDTOs(List<Station> stationList,StationFinderDTO searchDto){
+	private Map<Long,List<StationDTO>> toStationDTOs(List<Station> stationList,StationFinderDTO searchDto)throws BusinessException{
 		
 		Map<Long,List<StationDTO>>  returnMap= new HashMap<Long,List<StationDTO>>();
 		
@@ -113,7 +121,7 @@ import com.dmz.charging.station.finder.service.model.domain.Station;
 			 /**
 			  * Convert into dto
 			  */
-			 StationDTO dto = stationMapper.stationToStationDTO(station);
+			 StationDTO dto = getStationMapper().stationToStationDTO(station);
 			 
 			 /**
 			  * calculate the distance in km
@@ -151,7 +159,7 @@ import com.dmz.charging.station.finder.service.model.domain.Station;
 	 * @param searchDto
 	 * @return
 	 */
-	private String calculateDistance(Station station,StationFinderDTO searchDto ) {
+	private String calculateDistance(Station station,StationFinderDTO searchDto ) throws BusinessException{
 		//Radius of the earth
 		final double R=6371;
 		//@formatter:off
@@ -171,7 +179,7 @@ import com.dmz.charging.station.finder.service.model.domain.Station;
 	 * @param mapOfStations
 	 * @return
 	 */
-	private 	CompanyDto toCompanyDTO(String companyId,Map<Long,List<StationDTO>>  mapOfStations){
+	private 	CompanyDto toCompanyDTO(String companyId,Map<Long,List<StationDTO>>  mapOfStations)throws BusinessException{
 		
 		CompanyDto parentCompanyDto= null;
 		
@@ -193,7 +201,7 @@ import com.dmz.charging.station.finder.service.model.domain.Station;
 		return parentCompanyDto;
 		
 	}
-	private void buildHierarchy(Company company,CompanyDto parentDto ,Map<Long,List<StationDTO>>  mapOfStations  ) {
+	private void buildHierarchy(Company company,CompanyDto parentDto ,Map<Long,List<StationDTO>>  mapOfStations  )throws BusinessException {
 		
 		List<StationDTO> stations;
 		

@@ -4,6 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
+import com.dmz.charging.station.finder.exception.BusinessException;
 import com.dmz.charging.station.finder.service.model.custom.StationDTO;
 import com.dmz.charging.station.finder.service.model.domain.Station;
 
@@ -13,7 +14,7 @@ public interface  StationMapper {
 	@Mapping(target = "latitude", source = "latitudeInRadian",qualifiedByName = "radianToDegreeMapper")
 	@Mapping(target = "longitude", source = "longitudeInRadian",qualifiedByName = "radianToDegreeMapper")
 	@Mapping(target = "distanceFromCurrentlocation", ignore = true)
-	public  StationDTO stationToStationDTO(Station station);
+	public  StationDTO stationToStationDTO(Station station)throws BusinessException;
 	
 
 	@Named("radianToDegreeMapper")

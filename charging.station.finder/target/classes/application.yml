@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    password: my-secret-pw
+    url: jdbc:mysql://localhost:3306/chargingcenter
+    username: root
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          filter:
+            CommonsRequestLoggingFilter : DEBUG

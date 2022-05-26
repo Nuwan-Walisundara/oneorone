@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -36,6 +37,7 @@ public class Company {
 	@JoinColumn(name="parent_company_id")
 	private Company parent;
 
+	//@OneToMany(mappedBy="parent",fetch = FetchType.EAGER)
 	@OneToMany(mappedBy="parent")
 	private List<Company> subordinates = new ArrayList<Company>();
 

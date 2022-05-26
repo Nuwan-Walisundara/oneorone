@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
+import com.dmz.charging.station.finder.exception.BusinessException;
 import com.dmz.charging.station.finder.service.FinderService;
 import com.dmz.charging.station.finder.service.model.custom.SearchResult;
 import com.dmz.charging.station.finder.service.model.custom.StationFinderDTO;
@@ -25,28 +27,18 @@ public class StationFinderController {
 	FinderService repo;
 	
 	@PostMapping("/")
-	public SearchResult findNearestStations(@Valid @RequestBody StationFinderDTO searchDto) {
+	public SearchResult findNearestStations(@Valid @RequestBody(required=true) StationFinderDTO searchDto) {
 		
-		return repo.find(searchDto);
+		
+		  try {
+				return repo.find(searchDto);
+		    } catch (BusinessException ex) {
+		        throw new ResponseStatusException(
+		          HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error");
+		    }
+		  
+	
 	}
 	
-	/**
-	 * Customise the validation error response.
-	 * @param ex
-	 * @return
-	 */
-	//@ResponseStatus(HttpStatus.BAD_REQUEST)
-	//@ExceptionHandler(MethodArgumentNotValidException.class)
-	public Map<String, String> handleValidationExceptions(
-	  MethodArgumentNotValidException ex) {
-	    Map<String, String> errors = new HashMap<>();
-	    ex.getBindingResult().getAllErrors().forEach((error) -> {
-	        String fieldName = ((FieldError) error).getField();
-	       
-	        String errorMessage = error.getDefaultMessage();
-	        errors.put(fieldName, errorMessage);
-	    });
-	    return errors;
-	}
 }
 
