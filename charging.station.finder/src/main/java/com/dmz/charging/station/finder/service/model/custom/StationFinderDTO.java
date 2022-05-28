@@ -4,6 +4,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
 import lombok.AllArgsConstructor;
@@ -40,12 +41,14 @@ public class StationFinderDTO {
 	  * For calculation purpose latitude value in degrees into convert into Radian.
 	  * Formula :1° × π/180 = 0.01745rad
 	  */
+	 @JsonIgnore
 	 private double latitudeInRadian;
 	 
 	 /**
 	  * For calculation purpose logitude value in degrees into convert into Radian.
 	  * Formula :1° × π/180 = 0.01745rad
 	  */
+	 @JsonIgnore
 	 private double longitudeInRadian;
 	 
 	 /**

@@ -35,7 +35,7 @@ public class ChargingStationFinderImplTest {
 	@Autowired
 	ChargingStationFinderImpl chargingStationFinderimpl;
 
-	@DisplayName("When user provide all infomation corectly- then retun result")
+	@DisplayName("When user provide CompanyID,Preferred Radius,Latitude,Longitude correctly- then return result correct parent company ")
 	@Test
 	@Transactional
 	public void test1() {
@@ -56,7 +56,7 @@ public class ChargingStationFinderImplTest {
 		}
 	}
 
-	@DisplayName("When user provide all infomation corectly- then retun correct  company & station details")
+	@DisplayName("When user provide CompanyID,Preferred Radius,Latitude,Longitude correctly- then return result correct number of stations.")
 	@Test
 	@Transactional
 	public void test2() {
@@ -95,7 +95,7 @@ public class ChargingStationFinderImplTest {
 		}
 	}
 	
-	@DisplayName("When user search  with company code, codinate ,prferd distance- then only nearest stations should return")
+	@DisplayName("When user search  with company code, coordinates ,preferred distance- then only nearest stations  returns")
 	@Test
 	@Transactional
 	public void test4() {
@@ -124,7 +124,7 @@ public class ChargingStationFinderImplTest {
 	}
 	
 	
-	@DisplayName("When user search  with company code, codinate ,with out prferd distance- then all stations should return")
+	@DisplayName("When user search  for all stations for a given company id- then all stations returns.")
 	@Test
 	@Transactional
 	public void test5() {
@@ -151,4 +151,28 @@ public class ChargingStationFinderImplTest {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	@DisplayName("When user search using child company id- then system only returns only machining child company.")
+	@Test
+	@Transactional
+	public void test6() {
+		try {
+			StationFinderDTO searchDto = new StationFinderDTO();
+			searchDto.setCompanyID("SVPESUB1");
+			searchDto.setPreferredRadius(10);
+			searchDto.setLatitude(59.40172547799233);
+			searchDto.setLongitude(17.94621121167337);
+			
+			assertNotNull(chargingStationFinderimpl.find(searchDto).getCompany());
+			assertTrue (chargingStationFinderimpl.find(searchDto).getCompany().getName().equalsIgnoreCase("Svenska Petroleum Exploration AB - sub 1"));
+					
+			
+		} catch (BusinessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+
 }

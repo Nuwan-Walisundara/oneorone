@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.net.URI;
 import java.net.URL;
 
+import javax.transaction.Transactional;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
 
+import com.dmz.charging.station.finder.exception.BusinessException;
 import com.dmz.charging.station.finder.service.model.custom.CompanyDto;
 import com.dmz.charging.station.finder.service.model.custom.SearchResult;
 import com.dmz.charging.station.finder.service.model.custom.StationFinderDTO;
@@ -41,7 +44,7 @@ public class StationFinderControllerTest {
 	private TestRestTemplate restTemplate;
 
 	@Test
-	@DisplayName("When Rest consumer request with empty body- then retun error response")
+	@DisplayName("When Rest consumer request with empty body- then return error response")
 	public void test1() throws Exception {
 
 		HttpHeaders headers = new HttpHeaders();
@@ -59,7 +62,7 @@ public class StationFinderControllerTest {
 	}
 
 	@Test
-	@DisplayName("When Rest consumer request with Correct request body- then retun correct response hierachy")
+	@DisplayName("When Rest consumer request with Correct request body- then return correct response hierarchy")
 	public void test2() throws Exception {
 
 		HttpHeaders headers = new HttpHeaders();
@@ -82,7 +85,7 @@ public class StationFinderControllerTest {
 	}
 	
 	@Test
-	@DisplayName("When Rest consumer request with Correct company id, preferd radius,  latitude >90 - then retun 400 bad response, with Latitude can't be greter than 90 degrees")
+	@DisplayName("When Rest consumer request with Correct company id, preferred radius,  latitude >90 - then return 400 bad response, with Latitude can't be greater than 90 degrees")
 	public void test3() throws Exception {
 
 		HttpHeaders headers = new HttpHeaders();
@@ -105,7 +108,7 @@ public class StationFinderControllerTest {
 	}
 	
 	@Test
-	@DisplayName("When Rest consumer request with Correct company id, preferd radius,  latitude< (- 90) - then retun 400 bad response, Latitude can't be less than -90 degrees")
+	@DisplayName("When Rest consumer request with Correct company id, preferred radius,  latitude< (- 90) - then return 400 bad response, Latitude can't be less than -90 degrees")
 	public void test4() throws Exception {
 
 		HttpHeaders headers = new HttpHeaders();
@@ -128,7 +131,7 @@ public class StationFinderControllerTest {
 	}
 	
 	@Test
-	@DisplayName("When Rest consumer request with Correct company id, preferd radius,  longitude> (180) - then retun 400 bad response, longitude can't be greter than 180 degrees")
+	@DisplayName("When Rest consumer request with Correct company id, preferred radius,  longitude> (180) - then return 400 bad response, longitude can't be greater than 180 degrees.")
 	public void test5() throws Exception {
 
 		HttpHeaders headers = new HttpHeaders();
@@ -151,7 +154,7 @@ public class StationFinderControllerTest {
 	}
 	
 	@Test
-	@DisplayName("When Rest consumer request with Correct company id, preferd radius,  longitude< -(180) - then retun 400 bad response, longitude can't be less than -180 degrees")
+	@DisplayName("When Rest consumer request with Correct company id, preferred radius,  longitude< -(180) - then return 400 bad response, longitude can't be less than -180 degrees.")
 	public void test6() throws Exception {
 
 		HttpHeaders headers = new HttpHeaders();
@@ -173,7 +176,7 @@ public class StationFinderControllerTest {
 
 	}
 	@Test
-	@DisplayName("When Rest consumer request with Correct request body- then retun nearest station within the prefered radius")
+	@DisplayName("When Rest consumer request with Correct request body- then return nearest station within the preferred radius with correct format.")
 	public void test7() throws Exception {
 
 		HttpHeaders headers = new HttpHeaders();
@@ -196,7 +199,30 @@ public class StationFinderControllerTest {
 		assertNull(response.getBody().getCompany().getStations());
 		
 		assertNotNull(response.getBody().getCompany().getChildCompany().get(0).getStations());
-		assertTrue(response.getBody().getCompany().getChildCompany().get(0).getStations().get(0).getDistanceFromCurrentlocation().equalsIgnoreCase("6.526603499883207 KM"));
+		assertTrue(response.getBody().getCompany().getChildCompany().get(0).getStations().get(0).getDistanceFromCurrentlocation().equalsIgnoreCase("6.53 KM"));
+	}
+	
+	@DisplayName("When user search using  company id, preferred radius < available stations- then system returns empty.")
+	@Test
+	@Transactional
+	public void test8() throws Exception  {
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Content-Type", "application/json");
+		StationFinderDTO sf = new StationFinderDTO();
+		sf.setCompanyID("SVPEAB");
+		sf.setLatitude(59.40172547799233);
+		sf.setLongitude(17.94621121167337);
+		sf.setPreferredRadius(5);
+		
+		HttpEntity<StationFinderDTO> request = new HttpEntity<>(sf,headers);
+
+		// restTemplate.postForEntity(new URI("http://localhost:" + port + "/"),
+		// restTemplate, null);
+		ResponseEntity<SearchResult> response = restTemplate.postForEntity(new URI("http://localhost:" + port + "/"),
+				request, SearchResult.class);
+		assertNull(response.getBody().getCompany());
+	
 	}
 
 }

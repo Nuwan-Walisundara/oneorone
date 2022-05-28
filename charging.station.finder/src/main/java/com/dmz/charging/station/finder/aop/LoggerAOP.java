@@ -8,15 +8,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.dmz.charging.station.finder.exception.BusinessException;
-//@Component
 @Aspect
 public class LoggerAOP {
 	Logger logger = LoggerFactory.getLogger(LoggerAOP.class);
 	
-	@AfterThrowing(pointcut = "execution(public * *(..))",throwing = "error")
-	  public void doLog(JoinPoint jp, Throwable error) {
-		
-		logger.error("Method Signature: "  + jp.getSignature());  
+	@AfterThrowing(pointcut="public * *(..)",
+			throwing="error")
+	  public void doLog( Throwable error) {
+		//logger.error("Method Signature: "  + jp.getSignature());  
 		logger.error("Exception: "+error);  
 	  }
 

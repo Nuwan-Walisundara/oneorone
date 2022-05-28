@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.dmz.charging.station.finder.controller.StationFinderControllerTest
--------------------------------------------------------------------------------
-Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.12 s - in com.dmz.charging.station.finder.controller.StationFinderControllerTest

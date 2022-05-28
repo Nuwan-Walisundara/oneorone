@@ -5,14 +5,18 @@ import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 import static java.lang.Math.toRadians;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.dmz.charging.station.finder.aop.LoggerAOP;
 import com.dmz.charging.station.finder.dal.ChargingStationDAL;
 import com.dmz.charging.station.finder.dal.CompanyDAL;
 import com.dmz.charging.station.finder.exception.BusinessException;
@@ -29,7 +33,8 @@ import com.dmz.charging.station.finder.service.model.domain.Station;
  class ChargingStationFinderImpl implements FinderService {
 
 	private static final String DISTANCE_IN_KM_POST_FIX =  " KM";
-
+	
+	
 	@Autowired
 	CompanyDAL companyDal;
 	
@@ -42,6 +47,8 @@ import com.dmz.charging.station.finder.service.model.domain.Station;
 	@Autowired
 	StationMapper stationMapper;
 	
+	 private static final DecimalFormat df = new DecimalFormat("0.00");
+	 
 	public StationMapper getStationMapper() {
 		return stationMapper;
 	}
@@ -82,6 +89,13 @@ import com.dmz.charging.station.finder.service.model.domain.Station;
 		List<Station> stationList= chargingStationsDal.loadNearestStations(searchDto,companyIdList);
 		
 		/**
+		 * if there is no stations return empty
+		 */
+		if(stationList.isEmpty()) {
+			return new SearchResult();
+		}
+		
+		/**
 		 * group the station domain object into stationDto map
 		 */
 		 Map<Long,List<StationDTO>>  mapOfStations = toStationDTOs(stationList, searchDto);
@@ -97,6 +111,8 @@ import com.dmz.charging.station.finder.service.model.domain.Station;
 		 }else {
 			 return new SearchResult(companyDTOs);
 		 }
+		 
+		 
 		 
 	}
 	
@@ -169,8 +185,9 @@ import com.dmz.charging.station.finder.service.model.domain.Station;
 								* cos(station.getLatitudeInRadian()) 
 								* cos(searchDto.getLongitudeInRadian() 
 									- station.getLongitudeInRadian())) * R;
+	 
 		//@formatter:on
-		return distance + DISTANCE_IN_KM_POST_FIX;
+		return df.format(distance) + DISTANCE_IN_KM_POST_FIX;
 	}
 	
 	/**
