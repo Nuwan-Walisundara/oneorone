@@ -1,3 +1,3 @@
-com/dmz/charging/station/finder/ApplicationTests.class
-com/dmz/charging/station/finder/service/ChargingServiceTestConfiguration.class
+com/dmz/charging/station/finder/controller/ErrorDto.class
+com/dmz/charging/station/finder/controller/StationFinderControllerTest.class
 com/dmz/charging/station/finder/service/ChargingStationFinderImplTest.class

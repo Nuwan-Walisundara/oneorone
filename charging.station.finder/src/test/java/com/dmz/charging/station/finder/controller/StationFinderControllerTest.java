@@ -18,6 +18,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.jdbc.Sql;
 
 import com.dmz.charging.station.finder.service.model.custom.CompanyDto;
 import com.dmz.charging.station.finder.service.model.custom.SearchResult;
@@ -30,6 +31,7 @@ import lombok.Setter;
 import lombok.AccessLevel;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+//@Sql({ "/data_pub.sql"})
 public class StationFinderControllerTest {
 	// bind the above RANDOM_PORT
 	@LocalServerPort
@@ -194,7 +196,7 @@ public class StationFinderControllerTest {
 		assertNull(response.getBody().getCompany().getStations());
 		
 		assertNotNull(response.getBody().getCompany().getChildCompany().get(0).getStations());
-		assertTrue(response.getBody().getCompany().getChildCompany().get(0).getStations().get(0).getDistanceFromCurrentlocation().equalsIgnoreCase("6.526586398556875 KM"));
+		assertTrue(response.getBody().getCompany().getChildCompany().get(0).getStations().get(0).getDistanceFromCurrentlocation().equalsIgnoreCase("6.526603499883207 KM"));
 	}
 
 }

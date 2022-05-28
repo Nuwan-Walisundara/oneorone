@@ -1,9 +1,12 @@
 package com.dmz.charging.station.finder.service.model.domain;
 
-import java.util.List;
-
-import com.dmz.charging.station.finder.service.model.custom.CompanyDto;
-import com.dmz.charging.station.finder.service.model.custom.StationDTO;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,6 +17,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(name="station")
 public class Station {
 	
 	public Station(Long id,String name,double latitude,double longitude,Long company_id) {
@@ -21,17 +26,34 @@ public class Station {
 		this.name =name;
 		this.latitudeInRadian = latitude;
 		this.longitudeInRadian =longitude;
-		this.company_id=company_id;
+		company= new Company();
+		
+		this.company.setId(company_id);
 	}
 	
+	@javax.persistence.Id
+	@Column(name="id")
+	@GeneratedValue
 	private Long id ;
+	
+	@Column(name="name")
 	private String  name;
-	private double   latitude;
-	private double   longitude;
+	
+	/*
+	 * @Column(name="latitude") private double latitude;
+	 * 
+	 * @Column(name="longitude") private double longitude;
+	 */
+	
 	private double   latitudeInRadian;
 	private double   longitudeInRadian;
-	private Long company_id;
- 
+	
+	@ManyToOne(cascade={CascadeType.ALL})
+	@JoinColumn(name="company_id")
+	private Company company;
+
+
+	
 	
 	
 }

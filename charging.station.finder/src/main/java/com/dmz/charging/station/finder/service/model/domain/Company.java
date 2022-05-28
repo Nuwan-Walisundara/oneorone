@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
-@Entity
+@Entity(name="company")
 @Table(name="company")
 @Getter
 @Setter
@@ -41,12 +41,15 @@ public class Company {
 	@OneToMany(mappedBy="parent")
 	private List<Company> subordinates = new ArrayList<Company>();
 
+	@OneToMany(mappedBy="company")
+	private List<Station> stations = new ArrayList<Station>();
 	
 	private String name;
 	
 	@Column(name="company_code")
 	private String  companyCode;
  
-	
+	@Column(name="CHARGING_TECHNOLOGY")
+	private String  chargingTechnology;
 	
 }

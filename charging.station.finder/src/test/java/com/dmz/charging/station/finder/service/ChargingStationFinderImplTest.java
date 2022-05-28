@@ -12,6 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
+
 import com.dmz.charging.station.finder.dal.CompanyDAL;
 import com.dmz.charging.station.finder.dal.CompanyRepository;
 import com.dmz.charging.station.finder.exception.BusinessException;
@@ -20,6 +22,7 @@ import com.dmz.charging.station.finder.service.model.custom.SearchResult;
 import com.dmz.charging.station.finder.service.model.custom.StationFinderDTO;
 
 @SpringBootTest
+//@Sql({ "/data_pub.sql"})
 public class ChargingStationFinderImplTest {
 
 	@Mock

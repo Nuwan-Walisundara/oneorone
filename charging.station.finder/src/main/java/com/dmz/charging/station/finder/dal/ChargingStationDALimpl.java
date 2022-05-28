@@ -27,14 +27,14 @@ class ChargingStationDALimpl implements ChargingStationDAL {
 
 		
 		StringBuilder sql = new StringBuilder();
-		sql.append("SELECT id,name,latitude,longitude,company_id ")
+		sql.append("SELECT id,name,latitudeInRadian,longitudeInRadian,company_id ")
 			.append(" FROM station WHERE company_id in(:compList) ");
 		
 		if(searchDto.getPreferredRadius()>0) {
 			namedParameters.addValue("preferdDistance", searchDto.getPreferredRadius());
 			
 			sql	.append(" AND acos(")
-				.append("		sin(:srcLatitude) * sin(latitude) + cos(:srcLatitude) * cos(latitude) * cos(:srcLongitude-longitude )")
+				.append("		sin(:srcLatitude) * sin(latitudeInRadian) + cos(:srcLatitude) * cos(latitudeInRadian) * cos(:srcLongitude-longitudeInRadian )")
 				.append(" 		) * 6371 <= :preferdDistance ");
 		}
 		
@@ -42,8 +42,8 @@ class ChargingStationDALimpl implements ChargingStationDAL {
 				 									namedParameters,
 				 									(rs, rowNum)->  new Station(rs.getLong("id"), 
 				 																rs.getString("name"), 
-				 																rs.getDouble("latitude"), 
-				 																rs.getDouble("longitude"), 
+				 																rs.getDouble("latitudeInRadian"), 
+				 																rs.getDouble("longitudeInRadian"), 
 				 																rs.getLong("company_id")));
 		//@formatter:on
 	}

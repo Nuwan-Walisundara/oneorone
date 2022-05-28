@@ -132,14 +132,14 @@ import com.dmz.charging.station.finder.service.model.domain.Station;
 			  * Group by company
 			  */
 			 
-			 if(returnMap.containsKey(station.getCompany_id())) {
+			 if(returnMap.containsKey(station.getCompany().getId())) {
 				 
 				 //Already exists in the Map,Add to existing list
-				 returnMap.get(station.getCompany_id()) .add(dto);
+				 returnMap.get(station.getCompany().getId()) .add(dto);
 				 
 			 }else {
 				 //create new list and add under new company id
-				 returnMap.put(station.getCompany_id(),Arrays.asList(dto));
+				 returnMap.put(station.getCompany().getId(),Arrays.asList(dto));
 				 
 			 }
 			 
