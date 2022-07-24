@@ -1,0 +1,48 @@
+#spring:
+#  datasource:
+#    password: my-secret-pw
+#    url: jdbc:mysql://localhost:3306/chargingcenter
+#    username: root
+#  jpa:
+#   database-platform : org.hibernate.dialect.MySQL5InnoDBDialect
+#   hibernate:
+#     ddl-auto : update
+#     naming:
+#      physical-strategy : org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        web:
+#          filter:
+#
+#            CommonsRequestLoggingFilter : DEBUG
+
+
+
+spring:
+  datasource:
+   driver-class-name : org.postgresql.Driver
+   url : jdbc:postgresql://localhost:5432/oneorone
+   username : postgres
+   password : postgresroot
+  jpa:
+   database-platform : org.hibernate.dialect.PostgreSQLDialect
+   defer-datasource-initialization : true
+   show-sql: true
+#   generate-ddl: false
+   hibernate:
+#    ddl-auto : create-drop
+# Uppercase Table Names
+    naming:
+     physical-strategy : org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+     implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+server:  
+  error:
+    include-message : always
+
+
+logging:
+  level:
+   '[com.coffeeshop]' : DEBUG
+
