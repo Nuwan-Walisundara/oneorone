@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.coffeeshop.exception.BusinessException;
+import com.coffeeshop.exception.ErrorCode;
 import com.coffeeshop.service.mapper.OrderMapper;
 import com.coffeeshop.service.model.custom.MessageDTO;
 import com.coffeeshop.service.model.custom.OrderDTO;
@@ -28,7 +29,15 @@ class OrderImpl implements OrderService {
 	public OrderDTO processOrder(OrderDTO dto, String shopCode, String user) throws BusinessException {
 
 		Order order = dao.getOrderById(dto.getOrderId());
+		
+		if(order==null) {
+			throw new BusinessException(ErrorCode.ERROR_NO_ORDER_FOUND);
+		}
 	 
+		if(!order.getShopCode().equalsIgnoreCase(shopCode)) {
+			throw new BusinessException(ErrorCode.ERROR_INVALID_SHOP_CODE);
+		}
+		
 		/**
 		 * patch the order status , remarks 
 		 */
